@@ -83,6 +83,11 @@ Return Value:
 
     UNREFERENCED_PARAMETER (RegistryPath);
 
+    //
+    // Initialize down-level pool zeroing support
+    //
+    ExInitializeDriverRuntime(0); 
+
 	DbgPrintEx(DPFLTR_IHVDRIVER_ID, DPFLTR_INFO_LEVEL, ("Defect_Toastmon: Entered Driver Entry\n"));
 
     //
@@ -828,12 +833,11 @@ Return Value:
         // Allocate memory for the deviceinfo
         //
 
-        list = ExAllocatePoolWithTag(PagedPool,sizeof(DEVICE_INFO),DRIVER_TAG);
+        list = ExAllocatePoolZero(PagedPool,sizeof(DEVICE_INFO),DRIVER_TAG);
         if (list == NULL)
         {
             goto Error;
         }
-        RtlZeroMemory(list, sizeof(DEVICE_INFO));
 
         //
         // Copy the symbolic link
@@ -841,7 +845,7 @@ Return Value:
         list->SymbolicLink.MaximumLength = symbolicLinkName->Length +
                                           sizeof(UNICODE_NULL);
         list->SymbolicLink.Length = symbolicLinkName->Length;
-        list->SymbolicLink.Buffer = ExAllocatePoolWithTag (
+        list->SymbolicLink.Buffer = ExAllocatePoolZero (
                                        PagedPool,
                                        list->SymbolicLink.MaximumLength,
                                        DRIVER_TAG);

@@ -191,7 +191,7 @@ Return Value:
         }
     }
 
-    valueInfo = ExAllocatePoolWithTag (NonPagedPool, resultLength,
+    valueInfo = ExAllocatePoolZero (NonPagedPool, resultLength,
                                                 DRIVER_TAG);
     if (NULL == valueInfo) {
         status = STATUS_INSUFFICIENT_RESOURCES;
